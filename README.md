@@ -24,11 +24,8 @@ Por defecto en las distribuciones que usan bash existe una varible llamada TMOUT
 ### Iptables
 Iptables es una aplicación que permite el gestión, configuración y el manejo de filtrado de paquetes.
 
-### VPN
-A RELLENAR
-
 ### Monitorización a nivel de la red
-A RELLENAR
+* IDS Snort
 
 ## Protección de la red interna
 
@@ -52,10 +49,6 @@ Si las entradas ARP estáticas resultaban difíciles de mantener, es posible que
 
 * DHCP Spoofing
 Este ataque consiste en implementar un servidor DHCP alternativo con la finalidad de asignar direcciones IP a aquellas máquinas que las adquieran de forma automática.
-A RELLENAR
-
-* ICMP Redirect
-A RELLENAR
 
 ## Protección de la capa de aplicación
 
@@ -126,7 +119,7 @@ En numerosas ocasiones existen scripts mal programados que mediante parámetros 
 (allow_url_include= Off)
 
 ### Seguridad en el protocolo SSH
-* Directivas básicas
+Directivas básicas
 En primer lugar se trata el fichero sshdconfig:
 * Port: Indica en que puerto se colocará a la escucha el servicio SSH, por defecto el 22 pero podemos cambiarlo.
 * PermiiRootLogin: Con esta directiva se prohíbe que un usuario se loguee en el servidor con el usuario root. De este modo se evita ataques de fuerza bruta al usuario root.
