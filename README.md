@@ -128,16 +128,16 @@ En numerosas ocasiones existen scripts mal programados que mediante parámetros 
 ### Seguridad en el protocolo SSH
 * Directivas básicas
 En primer lugar se trata el fichero sshdconfig:
--Port: Indica en que puerto se colocará a la escucha el servicio SSH, por defecto el 22 pero podemos cambiarlo.
--PermiiRootLogin: Con esta directiva se prohíbe que un usuario se loguee en el servidor con el usuario root. De este modo se evita ataques de fuerza bruta al usuario root.
--MaxAuthTries: Esta directiva evita que los ataques de fuerza bruta puedan estar probando indefinidamente credenciales. 
--LoginGraceTime: Esta directiva indica el tiempo máximo, en segundos, para introducir las credenciales en la autenticación.
--AllowGroups: Esta directiva especifica el nombre de los grupos a los que pertenecen los usuarios que pueden iniciar sesión de manera remota mediante el protocolo SSH.
--AllowUsers: Se puede especificar en el fichero de configuración seguida de una lista de usuarios que pueden iniciar sesión mediante el protocolo SSH.
--Ciphers: Esta directiva especifica que cifrados admitirá la versión del protocolo.
--TCPKeepAlive: Deshabilitar esta directiva permite prevenir ataques de suplantación, ataques de tipo spoofing.
--DenyGroups: Esta directiva es similar a la de AllowGroups pero con un enfoque de denegación.
--DenyUsers: Contraria a la directiva AllowUsers, todo usuario que se encuentre asociado a esta directiva no podrá iniciar sesión de manera remota mediante el protocolo SSH.
+* Port: Indica en que puerto se colocará a la escucha el servicio SSH, por defecto el 22 pero podemos cambiarlo.
+* PermiiRootLogin: Con esta directiva se prohíbe que un usuario se loguee en el servidor con el usuario root. De este modo se evita ataques de fuerza bruta al usuario root.
+* MaxAuthTries: Esta directiva evita que los ataques de fuerza bruta puedan estar probando indefinidamente credenciales. 
+* LoginGraceTime: Esta directiva indica el tiempo máximo, en segundos, para introducir las credenciales en la autenticación.
+* AllowGroups: Esta directiva especifica el nombre de los grupos a los que pertenecen los usuarios que pueden iniciar sesión de manera remota mediante el protocolo SSH.
+* AllowUsers: Se puede especificar en el fichero de configuración seguida de una lista de usuarios que pueden iniciar sesión mediante el protocolo SSH.
+* Ciphers: Esta directiva especifica que cifrados admitirá la versión del protocolo.
+* TCPKeepAlive: Deshabilitar esta directiva permite prevenir ataques de suplantación, ataques de tipo spoofing.
+* DenyGroups: Esta directiva es similar a la de AllowGroups pero con un enfoque de denegación.
+* DenyUsers: Contraria a la directiva AllowUsers, todo usuario que se encuentre asociado a esta directiva no podrá iniciar sesión de manera remota mediante el protocolo SSH.
 
 * Fail2ban
 Su función es penalizar la conexión, ya sea por medio de un bloqueo, de un origen que intenta realizar un proceso de fuerza bruta. En otras palabras, cuando una dirección IP o varias intentan realizar un ataque de fuerza bruta sobre un servicio, como puede ser FTP, SSH, etcétera, esta aplicación detectará y penalizará dichos comportamientos.
