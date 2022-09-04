@@ -1,148 +1,148 @@
 # Linux-server-security
 With this guide you can keep your Linux servers safe
 
-## Seguridad física
-Existen muchas herramientas para saltarse la seguridad de tus servidores de forma física. Un Pendrive, un cable OMG, un CD etc. Asi que no tengas tus servidores al alcance de cualquiera.
+## Physical security
+There are many tools to bypass the security of your servers physically. A Pendrive, an OMG cable, a CD etc. So do not have your servers available to anyone.
 
 ### BIOS/UEFI
-* Edición de opciones de protegida por contraseña.
-* Deshabilitar la selección de medio de arranque.
-* Deshabilitar, si es posible, el arranque por USB y tarjetas de red, así si el atacante tiene acceso a los periféricos se encontrará una barrera extra.
+* Password protected editing options.
+* Disable boot media selection.
+* Disable, if possible, USB booting and network cards, so if the attacker has access to the peripherals, an extra barrier will be found.
 
-### GRUB
-Desde el GRUB se puede obtener acceso a root fácilmente, por lo que tenemos que añadir una contraseña maestra al GRUB. Esta contraseña estará cifrada en MD5 o si es posible pbkdf2. Otra recomendación sería cifrar los discos por si el atacante apaga los servidores y se lleva los discos.
+###GRUB
+From GRUB you can easily get root access, so we have to add a master password to GRUB. This password will be encrypted in MD5 or if possible pbkdf2. Another recommendation would be to encrypt the disks in case the attacker shuts down the servers and takes the disks.
 
-### Buenas prácticas
-* Variable de entorno TMOUT
-Por defecto en las distribuciones que usan bash existe una varible llamada TMOUT que está deshabilitada inicialmente. Su contenido consiste en cerrar una sesión inactiva en el tiempo.
+### Good practices
+* TMOUT environment variable
+By default in distributions that use bash there is a variable called TMOUT that is initially disabled. Its content consists of closing an inactive session in time.
 
-* Evitar el reinicio y apagado accidental 
-(chmod a-x /etc/acpi/powerbtn-acpi-support.sh)
+* Prevent accidental restart and shutdown
+(chmod a -x /etc/acpi/powerbtn-acpi-support.sh)
 
-## Protección perimetral
+## Perimeter Protection
 
-### Iptables
-Iptables es una aplicación que permite el gestión, configuración y el manejo de filtrado de paquetes.
+### iptables
+Iptables is an application that allows the management, configuration and handling of packet filtering.
 
-### Monitorización a nivel de la red
+### Network level monitoring
 * IDS Snort
 
-## Protección de la red interna
+## Internal network protection
 
-### Spoofing o suplantación de identidad
-En muchos casos se confía en que los usuarios van a realizar un uso correcto de la misma. Los ataques más comunes son MITM o DDos pero existen más tipos.
+### Spoofing or identity theft
+In many cases, it is trusted that users will make correct use of it. The most common attacks are MITM or DDos but there are more types.
 
-* ARP Poisoning
-Este ataque consiste, como su nombre indica, en envenenar las tablas de cache ARP de las máquinas víctimas. Envenenando la caché ARP es posible conseguir un entorno MITM.
+* ARP poisoning
+This attack consists, as its name suggests, in poisoning the ARP cache tables of the victim machines. By poisoning the ARP cache it is possible to achieve a MITM environment.
 
-* Protección contra ARP Poisoning
-Queda comprobado que un ataque MITM aprovechando la funcionalidad ARP es muy peligroso si se lleva a cabo de forma transparente consiguiendo que el usuario no sospeche que está siendo atacado.
+* Protection against ARP Poisoning
+It has been proven that a MITM attack taking advantage of the ARP functionality is very dangerous if it is carried out transparently, ensuring that the user does not suspect that he is being attacked.
 
-* Entradas ARP estáticas
-La más obvia de ellas es la utilización de entradas ARP estáticas en las máquinas cliente para que estas no puedan ser atacadas con éxito. Se trata de un método muy simple y fácil de llevar a cabo solo si se está en un entorno pequeño.
+* Static ARP entries
+The most obvious of these is the use of static ARP entries on client machines so that they cannot be successfully attacked. This is a very simple and easy method to carry out only if you are in a small environment.
 
-* Monitorización de ARP
-Como se comentaba con anterioridad, no siempre resulta posible o viable mantener entradas estáticas ARP en las máquinas de un entorno. Si fuese posible, sin duda se estaría evitando el ataque pero el administrador de la red puede que no supiera que está habiendo intentos de ataques ARP. Es por ello que existen aplicaciones que se ejecutan como demonios en las máquinas de una red que detectan si se está sufriendo un ataque ARP Poisoning, evitándolo y notificándolo al administrador de la red.
+* ARP monitoring
+As discussed earlier, it is not always possible or feasible to maintain static ARP entries on machines in an environment. If possible, the attack would certainly be prevented, but the network administrator may not have been aware that ARP attacks were being attempted. That is why there are applications that run as daemons on network machines that detect if an ARP Poisoning attack is being suffered, avoiding it and notifying the network administrator.
 
-* Utilización del fichero /etc/hosts
-Si las entradas ARP estáticas resultaban difíciles de mantener, es posible que establecer una equivalencia IP - Nombre sea aún más complicado.
+* Use of the /etc/hosts file
+If static ARP entries were difficult to maintain, establishing an IP - Name mapping may be even more difficult.
 
 * DHCP Spoofing
-Este ataque consiste en implementar un servidor DHCP alternativo con la finalidad de asignar direcciones IP a aquellas máquinas que las adquieran de forma automática.
+This attack consists of implementing an alternative DHCP server in order to assign IP addresses to those machines that acquire them automatically.
 
-## Protección de la capa de aplicación
+## Application layer protection
 
-### Jaulas con chroot
-Si una aplicación, PDF u otro archivo está infectado puede traer consecuencias graves. Para ello podríamos usar una máquina virtual o Sandbox.
-Como su nombre hace pensar, con chroot se modifica la raíz del sistema para un determinado proceso, haciéndole creer que realmente esa es la raíz de ficheros del
-sistema. Esto supone que el proceso ejecutado dentro de una jaula chroot “verá” solo lo que se quiera que vea. Inicialmente una jaula es una carcasa totalmente vacía, sin contenido alguno y será necesario poner en ella los componentes justos y necesarios para permitir la ejecución de una aplicación. Antes de pasar a un ejemplo de chroot es necesario conocer algunas particularidades y recomendaciones para su uso:
+### Cages with chroot
+If an app, PDF or other file is infected it can have serious consequences. For this we could use a virtual machine or Sandbox.
+As its name suggests, with chroot the root of the system is modified for a certain process, making it believe that this is really the root of the files of the
+system. This assumes that the process running inside a chrooted jail will "see" only what you want it to see. Initially, a cage is a completely empty casing, without any content, and it will be necessary to put in it the fair and necessary components to allow the execution of an application. Before moving on to an example of chroot, it is necessary to know some particularities and recommendations for its use:
 
-* Nunca utilizar chroot para un proceso ejecutado como root. No tiene ningún sentido hacerlo así pues el usuario root siempre podrá salir de la jaula al sistema de ficheros real.
-* Incluir en la jaula los componentes mínimos necesarios para la ejecución de un proceso. En el ejemplo se verá cómo conocer dichos componentes y cómo agregarlos a la jaula.
-* Mantener los permisos de los ficheros lo más restrictivos posibles para no conceder a un potencial atacante ni el mínimo ápice de oportunidad para modificar ficheros a su antojo, ejecutables, etc.
-* Nunca utilizar una jaula chroot como único método de seguridad implementado. No servirá de nada en absoluto.
+* Never use chroot for a process running as root. It doesn't make any sense to do it like this since the root user will always be able to get out of the jail to the real filesystem.
+* Include in the cage the minimum components necessary for the execution of a process. In the example you will see how to know these components and how to add them to the cage.
+* Keep file permissions as restrictive as possible so as not to give a potential attacker even the slightest opportunity to modify files at will, executables, etc.
+* Never use a chroot jail as the only security method implemented. It won't do any good at all.
 
-### Limitación de recursos
-En cualquier tipo de entorno, ya sea en producción o de pruebas, resulta muy importante controlar los recursos que se utilizan en una máquina. En numerosas ocasiones las configuraciones por defecto o los límites que se establecen no son suficientes.
+### Resource limitation
+In any type of environment, be it in production or testing, it is very important to control the resources that are used on a machine. On numerous occasions, the default settings or the limits that are established are not enough.
 
-### Establecer una política de contraseñas
-Las contraseñas caducarán cada "x" tiempo.
-Un mínimo de caracteres, números, caracteres especiales.
-Intentos máximos para acceder.
+### Set a password policy
+Passwords will expire every "x" time.
+A minimum of characters, numbers, special characters.
+Maximum attempts to access.
 
-### Cuotas de almacenamiento
-Cuando un disco o partición llega al máximo de su capacidad el sistema, dependiendo de la situación, dejará de responder y prestar sus servicios si no se libera espacio. Para prevenir estas situaciones se utilizan las llamadas cuotas, que no son otra cosa que el establecimiento de límites de almacenamiento para usuarios o grupos.
+### Storage fees
+When a disk or partition reaches its maximum capacity, the system, depending on the situation, will stop responding and providing its services if space is not freed. To prevent these situations, so-called quotas are used, which are nothing more than the establishment of storage limits for users or groups.
 
-### Port-Knocking
-Es es un mecanismo que permite crear una capa de seguridad por oscuridad, es decir ayuda a proteger un recurso de un sistema mediante su ocultación. 
-Por ejemplo con el puerto SSH para tratar de securizar dicho entorno, se desea evitar que escaneos de red, con nmap por ejemplo, desvelen que esa máquina
-dispone de un servicio SSH. La idea consiste en que inicialmente el puerto utilizado por SSH esté bloqueado mediante reglas de firewall y solo cuando un usuario desee acceder se le conceda el acceso exclusivamente a él.
+### Port Knocking
+It is a mechanism that allows you to create a security layer by obscurity, that is, it helps to protect a system resource by hiding it.
+For example with the SSH port to try to secure said environment, you want to prevent network scans, with nmap for example, from revealing that this machine
+It has an SSH service. The idea is that initially the port used by SSH is blocked by firewall rules and only when a user wants access is access granted exclusively to him.
 
 ### SPA, Single Packet Authorization
-A pesar de que Port-Knocking puede resultar útil a priori, es un concepto demasiado básico y si algún atacante adquiere la secuencia de paquetes utilizada podrá terminar habilitando un acceso al servidor SSH. Por supuesto, después tendría que lidiar con la seguridad del servicio SSH pero esta primera capa la habría roto fácilmente. Puede considerarse como una variante de Port-Knocking pero sin embargo no se envía una secuencia de paquetes sino un solo único paquete con información cifrada. Esto añade privacidad y autenticación.
+Although Port-Knocking can be useful a priori, it is too basic a concept and if an attacker acquires the sequence of packets used, they could end up enabling access to the SSH server. Of course you would then have to deal with the security of the SSH service but this first layer would have easily broken it. It can be considered as a variant of Port-Knocking, however, a sequence of packets is not sent, but rather a single packet with encrypted information. This adds privacy and authentication.
 
-###  HIDS, Host-based Intrusión Detection System
-Es un sistema o serie de mecanismos por el cual se detectan cambios, accesos e irregularidades en una máquina. El beneficio que obtiene un administrador de
-sistemas utilizando este tipo de software es que será alertado e incluso puede que no se precise de su interacción para solventar un potencial problema detectado.
+### HIDS, Host-based Intrusion Detection System
+It is a system or series of mechanisms by which changes, accesses and irregularities in a machine are detected. The benefit that a manager obtains from
+systems using this type of software is that you will be alerted and your interaction may not even be required to solve a potential problem detected.
 
-## Entorno de desarrollo
+## development environment
 
 ### MySQL
-* Dirección de escucha
-Si añadimos el parámetro (bind-address=127.0.0.1) conseguimos bloquear los accesos que no vengan de localhost.
-* Carga de ficheros locales
-Por defecto, desde la consola de MySQL podría realizarse lo siguiente: mysql> select load_file('/etc/passwd');
-Para deshabilitar la carga de ficheros desde MySQL y evitar una posible fuga de información desde el sistema de ficheros mediante un SQLi, es necesario establecer la siguiente configuración en el fichero (/etc/mysql/my.cnf)
-* Renombrar el usuario root
+* listening direction
+If we add the parameter (bind-address=127.0.0.1) we manage to block accesses that do not come from localhost.
+*Loading local files
+By default, from the MySQL console the following could be done: mysql> select load_file('/etc/passwd');
+To disable the loading of files from MySQL and avoid a possible leak of information from the file system through SQLi, it is necessary to establish the following configuration in the file (/etc/mysql/my.cnf)
+* Rename the root user
 mysql> update mysql.user set user='ivan' where user='root';
 mysql> flush privileges;
-* Comprobar existencia de usuarios anónimos
-En numerosas instalaciones de MySQL se crean usuarios anónimos por defecto que podrían ser utilizados para extraer información. Para solucionarlo:
-mysql> select user usuarios,host from mysql.user where user='''';
-* Controlar los privilegios de los usuarios
+* Check existence of anonymous users
+Many MySQL installations create anonymous users by default that could be used to extract information. In order to solve it:
+mysql> select user users,host from mysql.user where user='''';
+* Control user privileges
 * mysql_secure_installation
-Se trata de un script encargado de asegurar determinados aspectos de MySQL. En concreto buscará usuarios anónimos, establecerá el password del usuario administrador, eliminará las bases de datos test, etc. Es recomendable ejecutar este script, ya sea antes o después de las configuraciones ya mencionadas.
+It is a script responsible for securing certain aspects of MySQL. Specifically, it will look for anonymous users, it will establish the password of the administrator user, it will eliminate the test databases, etc. It is recommended to run this script, either before or after the settings already mentioned.
 
 ### PHP
 * expose_php
-Si un atacante realiza 'fingerprinting' puede obtener la versión de PHP utilizada. Para evitarlo en el fichero /etc/php/apache2/php.ini y añadimos (expose_php= Off)
-* displayerrors
-Para deshabilitar la salida de errores que puedan mostrar información sensible (display_errors= Off)
+If an attacker performs 'fingerprinting' they can obtain the version of PHP used. To avoid it in the /etc/php/apache2/php.ini file and add (expose_php= Off)
+* display errors
+To disable the output of errors that may display sensitive information (display_errors= Off)
 * openbasedir
-Uno de los ataques más comunes en aplicaciones web son los llamados Path Traversal. El ejemplo más clásico para esto consiste en tratar de conseguir ficheros con información sensible como / etc/passwd. Para evitar esto (open_basedir= /var/www)
-* disablefunctions
-Es posible deshabilitar determinadas funciones de PHP. Esto puede resultar útil en situaciones en las que un atacante consigue inyectar algún tipo de shell.
+One of the most common attacks on web applications are called Path Traversal. The most classic example for this is trying to get files with sensitive information like /etc/passwd. To avoid this (open_basedir= /var/www)
+* disable functions
+It is possible to disable certain PHP functions. This can be useful in situations where an attacker manages to inject some kind of shell.
 (disable_functions= phpinfo, exec, system, eval, shell_exec, ini_set)
-* Deshabilitar RFI
-En numerosas ocasiones existen scripts mal programados que mediante parámetros GET o POST permitirían la inclusión de código malicioso por parte de un atacante. Existen dos opciones para deshabilitar este comportamiento, tanto para incluir código de un script, como para abrir ficheros.
-(allow_url_fopen= Off)
-(allow_url_include= Off)
+* Disable RFI
+On numerous occasions, there are badly programmed scripts that, through GET or POST parameters, would allow the inclusion of malicious code by an attacker. There are two options to disable this behavior, both to include script code and to open files.
+(allow_url_fopen=Off)
+(allow_url_include=Off)
 
-### Seguridad en el protocolo SSH
-Directivas básicas
-En primer lugar se trata el fichero sshdconfig:
-* Port: Indica en que puerto se colocará a la escucha el servicio SSH, por defecto el 22 pero podemos cambiarlo.
-* PermiiRootLogin: Con esta directiva se prohíbe que un usuario se loguee en el servidor con el usuario root. De este modo se evita ataques de fuerza bruta al usuario root.
-* MaxAuthTries: Esta directiva evita que los ataques de fuerza bruta puedan estar probando indefinidamente credenciales. 
-* LoginGraceTime: Esta directiva indica el tiempo máximo, en segundos, para introducir las credenciales en la autenticación.
-* AllowGroups: Esta directiva especifica el nombre de los grupos a los que pertenecen los usuarios que pueden iniciar sesión de manera remota mediante el protocolo SSH.
-* AllowUsers: Se puede especificar en el fichero de configuración seguida de una lista de usuarios que pueden iniciar sesión mediante el protocolo SSH.
-* Ciphers: Esta directiva especifica que cifrados admitirá la versión del protocolo.
-* TCPKeepAlive: Deshabilitar esta directiva permite prevenir ataques de suplantación, ataques de tipo spoofing.
-* DenyGroups: Esta directiva es similar a la de AllowGroups pero con un enfoque de denegación.
-* DenyUsers: Contraria a la directiva AllowUsers, todo usuario que se encuentre asociado a esta directiva no podrá iniciar sesión de manera remota mediante el protocolo SSH.
+### Security in the SSH protocol
+Basic Directives
+First, the sshdconfig file is treated:
+* Port: Indicates on which port the SSH service will listen, by default it is 22 but we can change it.
+* PermiiRootLogin: This directive prohibits a user from logging into the server with the root user. This prevents brute force attacks on the root user.
+* MaxAuthTries: This directive prevents brute force attacks from endlessly trying credentials.
+* LoginGraceTime: This directive indicates the maximum time, in seconds, to introduce the credentials in the authentication.
+* AllowGroups: This directive specifies the name of the groups to which users who can log in remotely using the SSH protocol belong.
+* AllowUsers: It can be specified in the configuration file followed by a list of users that can log in through the SSH protocol.
+* Ciphers: This directive specifies which ciphers the protocol version will support.
+* TCPKeepAlive: Disabling this directive allows to prevent impersonation attacks, spoofing type attacks.
+* DenyGroups: This directive is similar to AllowGroups but with a deny approach.
+* DenyUsers: Contrary to the AllowUsers directive, any user associated with this directive will not be able to log in remotely using the SSH protocol.
 
 * Fail2ban
-Su función es penalizar la conexión, ya sea por medio de un bloqueo, de un origen que intenta realizar un proceso de fuerza bruta. En otras palabras, cuando una dirección IP o varias intentan realizar un ataque de fuerza bruta sobre un servicio, como puede ser FTP, SSH, etcétera, esta aplicación detectará y penalizará dichos comportamientos.
+Its function is to penalize the connection, either by means of a block, of an origin that tries to carry out a brute force process. In other words, when an IP address or several try to carry out a brute force attack on a service, such as FTP, SSH, etc., this application will detect and penalize said behaviors.
 
 
-### Escalada de privilegios
-En Linux existen muchas formas de obtener privilegios, vamos a comentar algunas de ellas:
-* Por SUDO
-* Desbordamiento del buffer
-* Permiso de escritura en el archivo passwd
+### Privilege escalation
+In Linux there are many ways to obtain privileges, we are going to comment on some of them:
+* By SUDO
+* Buffer overflow
+* Write permission on the passwd file
 * Capabilities
-* Permisos especiales
+* Special permissions
 * Exploits
-* Tarea CRON
+* CRON task
 
